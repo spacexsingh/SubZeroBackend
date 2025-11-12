@@ -149,4 +149,12 @@ class SideEvent extends Model
     {
         return $this->start_datetime->diffInMinutes($this->end_datetime);
     }
+
+    /**
+     * Get the Luma event for this side event.
+     */
+    public function lumaEvent(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(LumaEvent::class);
+    }
 }

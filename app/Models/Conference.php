@@ -156,4 +156,12 @@ class Conference extends Model
     {
         return now()->gt($this->end_datetime);
     }
+
+    /**
+     * Get the Luma API key for this conference.
+     */
+    public function lumaApiKey(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(LumaApiKey::class);
+    }
 }
