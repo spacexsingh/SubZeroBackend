@@ -8,6 +8,9 @@ use App\Jobs\RegisterLumaGuestJob;
 use App\Models\LumaEvent;
 use App\Models\LumaGuest;
 use App\Models\LumaGuestWalletAddress;
+use App\Models\Merchandise;
+use App\Models\PointAction;
+use App\Models\PointTransaction;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -269,6 +272,61 @@ class LumaGuestController extends Controller
                 ], 404);
             }
 
+            // Calculate user's point balance
+            $balance = PointTransaction::where('user_id', $user->id)->sum('points');
+
+            // Get redeemed items (spend transactions with merchandise details)
+            $redeemedItems = PointTransaction::where('user_id', $user->id)
+                ->where('type', 'spend')
+                ->with('merchandise:id,code,name,points_cost')
+                ->orderByDesc('created_at')
+                ->get()
+                ->map(function ($transaction) {
+                    return [
+                        'transaction_id' => $transaction->id,
+                        'merchandise_id' => $transaction->merchandise_id,
+                        'merchandise_code' => $transaction->merchandise->code ?? null,
+                        'merchandise_name' => $transaction->merchandise->name ?? null,
+                        'points_spent' => abs($transaction->points),
+                        'redeemed_at' => $transaction->created_at,
+                    ];
+                });
+
+            // Get earned point actions
+            $earnedActions = PointTransaction::where('user_id', $user->id)
+                ->where('type', 'earn')
+                ->with('action:id,code,name,points')
+                ->orderByDesc('created_at')
+                ->get()
+                ->map(function ($transaction) {
+                    return [
+                        'transaction_id' => $transaction->id,
+                        'action_id' => $transaction->point_action_id,
+                        'action_code' => $transaction->action->code ?? null,
+                        'action_name' => $transaction->action->name ?? null,
+                        'points_earned' => $transaction->points,
+                        'earned_at' => $transaction->created_at,
+                    ];
+                });
+
+            // Get IDs of actions already earned
+            $earnedActionIds = PointTransaction::where('user_id', $user->id)
+                ->where('type', 'earn')
+                ->pluck('point_action_id')
+                ->toArray();
+
+            // Get available point actions (not yet earned)
+            $availableActions = PointAction::whereNotIn('id', $earnedActionIds)
+                ->get()
+                ->map(function ($action) {
+                    return [
+                        'action_id' => $action->id,
+                        'action_code' => $action->code,
+                        'action_name' => $action->name,
+                        'points' => $action->points,
+                    ];
+                });
+
             return response()->json([
                 'success' => true,
                 'message' => 'User found successfully',
@@ -279,10 +337,14 @@ class LumaGuestController extends Controller
                     'last_name' => $user->last_name,
                     'email' => $user->email,
                     'user_type' => $user->user_type,
+                    'balance' => (int) $balance,
                     'luma_guest_id' => $lumaGuest->id,
                     'current_status' => $lumaGuest->current_status,
                     'wallet_address' => $walletAddress->wallet_address,
                     'wallet_type' => $walletAddress->wallet_type,
+                    'redeemed_items' => $redeemedItems,
+                    'earned_actions' => $earnedActions,
+                    'available_actions' => $availableActions,
                 ],
             ], 200);
 

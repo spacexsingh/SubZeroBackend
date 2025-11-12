@@ -4,6 +4,8 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\ConferenceController;
 use App\Http\Controllers\Api\ConferenceStaffController;
 use App\Http\Controllers\Api\LumaGuestController;
+use App\Http\Controllers\Api\PointsCatalogController;
+use App\Http\Controllers\Api\PointsController;
 use App\Http\Controllers\Api\SideEventController;
 use App\Http\Controllers\Api\SideEventStaffController;
 use Illuminate\Http\Request;
@@ -85,3 +87,18 @@ Route::post('/luma/guests/register', [LumaGuestController::class, 'register']);
 Route::post('/luma/guests/connect-wallet', [LumaGuestController::class, 'connectWallet']);
 Route::get('/luma/guests/by-wallet', [LumaGuestController::class, 'getUserByWallet']);
 Route::put('/luma/guests/{id}/status', [LumaGuestController::class, 'updateStatus']);
+
+
+Route::prefix('points')->group(function () {
+    // Catalog
+    Route::get('/actions',      [PointsCatalogController::class, 'actions']);
+    Route::get('/merchandise',  [PointsCatalogController::class, 'merchandise']);
+
+    // User balance & transactions
+    Route::get('/balance',       [PointsController::class, 'balance']);
+    Route::get('/transactions',  [PointsController::class, 'transactions']);
+
+    // Earn / Redeem
+    Route::post('/earn',    [PointsController::class, 'earn']);
+    Route::post('/redeem',  [PointsController::class, 'redeem']);
+});
