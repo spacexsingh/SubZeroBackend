@@ -5,6 +5,7 @@ namespace App\Traits;
 use App\Enums\UserType;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 trait ManagesLumaGuestUsers
@@ -30,10 +31,10 @@ trait ManagesLumaGuestUsers
      */
     protected function createUser(array $guestInfo, UserType $userType): User
     {
-        $firstName = $guestInfo['first_name'] ?? '';
-        $lastName = $guestInfo['last_name'] ?? '';
-        $name = $guestInfo['name'] ?? trim("{$firstName} {$lastName}");
-        $email = $guestInfo['email'] ?? '';
+        $firstName = $guestInfo['first_name'] ?? $guestInfo[ 'user_first_name'] ?? '';
+        $lastName = $guestInfo['last_name'] ?? $firstName['user_last_name'] ?? '';
+        $name = $guestInfo['name'] ?? $guestInfo['user_name'] ?? trim("{$firstName} {$lastName}");
+        $email = $guestInfo['email'] ?? $guestInfo['user_email'] ?? '';
 
         // Check if user already exists with this email
         if ($email && $existingUser = User::where('email', $email)->first()) {

@@ -312,6 +312,8 @@ class LumaGuestController extends Controller
             'notes' => 'sometimes|string|max:500',
         ]);
 
+        Log::info('in updateStatus', $request->all());
+
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,

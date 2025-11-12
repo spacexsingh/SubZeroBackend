@@ -40,4 +40,18 @@ return [
         'sleep' => env('LUMA_API_RETRY_SLEEP', 1000), // milliseconds
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Default Event Details
+    |--------------------------------------------------------------------------
+    |
+    | Configuration for the default event including event id and api key
+    |
+    */
+
+    'event' => [
+        'id' => env('LUMA_EVENT_ID', 3),
+        'api_key' => env('LUMA_EVENT_API_KEY', 1000), // milliseconds
+    ],
+
 ];
