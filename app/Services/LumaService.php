@@ -37,17 +37,29 @@ class LumaService
     /**
      * Get the HTTP client with common configuration.
      */
-    protected function client(string $apiKey): PendingRequest
+    protected function client(string $apiKey, bool $withRetry = false): PendingRequest
     {
-        return Http::withHeaders([
+        $client = Http::withHeaders([
             'x-luma-api-key' => $apiKey,
             'Accept' => 'application/json',
         ])
-        ->timeout($this->timeout)
-        ->retry(
-            config('luma.retry.times'),
-            config('luma.retry.sleep')
-        );
+        ->timeout($this->timeout);
+
+        // Only add retry logic if requested (for background jobs)
+        if ($withRetry) {
+            $client = $client->retry(
+                config('luma.retry.times'),
+                config('luma.retry.sleep'),
+                function ($exception, $request) {
+                    // Only retry on server errors (5xx), not client errors (4xx)
+                    return $exception instanceof \Illuminate\Http\Client\RequestException
+                        && $exception->response->status() >= 500;
+                },
+                throw: false
+            );
+        }
+
+        return $client;
     }
 
     /**
@@ -64,10 +76,11 @@ class LumaService
      * @param string $eventApiId The Luma event API ID
      * @param string $apiKey The Luma API key
      * @param string|null $paginationCursor The cursor for pagination
+     * @param bool $withRetry Whether to retry on failures (default false for HTTP requests)
      * @return array The API response
      * @throws \Exception
      */
-    public function getGuests(string $eventApiId, string $apiKey, ?string $paginationCursor = null): array
+    public function getGuests(string $eventApiId, string $apiKey, ?string $paginationCursor = null, bool $withRetry = false): array
     {
         $queryParams = [
             'event_api_id' => $eventApiId,
@@ -78,7 +91,7 @@ class LumaService
         }
 
         try {
-            $response = $this->client($apiKey)->get(
+            $response = $this->client($apiKey, $withRetry)->get(
                 $this->endpoint('event/get-guests'),
                 $queryParams
             );
@@ -150,13 +163,14 @@ class LumaService
      * @param string $guestApiId The Luma guest API ID
      * @param string $eventApiId The Luma event API ID
      * @param string $apiKey The Luma API key
+     * @param bool $withRetry Whether to retry on failures (default false for HTTP requests)
      * @return array The guest data
      * @throws \Exception
      */
-    public function getGuestById(string $guestApiId, string $eventApiId, string $apiKey): array
+    public function getGuestById(string $guestApiId, string $eventApiId, string $apiKey, bool $withRetry = false): array
     {
         try {
-            $response = $this->client($apiKey)->get(
+            $response = $this->client($apiKey, $withRetry)->get(
                 $this->endpoint('event/get-guest'),
                 [
                     'id' => $guestApiId,

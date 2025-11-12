@@ -79,7 +79,10 @@ class RegisterLumaGuestJob implements ShouldQueue
                 return [
                     'luma_guest_id' => $lumaGuest->id,
                     'user_id' => $user->id,
-                    'user_type' => $user->user_type,
+                    'name' => $user->name,
+                    'email' => $user->email,
+                    'user_type' => $user->user_type->value,
+                    'user_type_label' => $user->user_type->label(),
                 ];
             });
         } catch (\Exception $e) {

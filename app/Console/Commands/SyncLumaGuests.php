@@ -160,7 +160,7 @@ class SyncLumaGuests extends Command
      */
     protected function fetchGuestsFromLuma(string $lumaEventId, string $apiKey, ?string $cursor = null): array
     {
-        return $this->lumaService->getGuests($lumaEventId, $apiKey, $cursor);
+        return $this->lumaService->getGuests($lumaEventId, $apiKey, $cursor, true);
     }
 
     /**

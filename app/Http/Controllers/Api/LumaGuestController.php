@@ -9,6 +9,7 @@ use App\Models\LumaGuest;
 use App\Models\LumaGuestWalletAddress;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
 class LumaGuestController extends Controller
@@ -93,18 +94,34 @@ class LumaGuestController extends Controller
             ], 404);
 
         } catch (\Exception $e) {
-            // Check if error is from Luma API (guest not found)
-            if (str_contains($e->getMessage(), 'Luma API error: 404')) {
+            $errorMessage = $e->getMessage();
+
+            // Check if error is from Luma API (guest not found - 404)
+            if (str_contains($errorMessage, 'Luma API error: 404')) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Guest not found in Luma',
                 ], 404);
             }
 
+            // Check for other Luma API client errors (400-499)
+            if (preg_match('/Luma API error: (4\d{2})/', $errorMessage, $matches)) {
+                $statusCode = (int) $matches[1];
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Invalid request to Luma API',
+                ], $statusCode);
+            }
+
+            // Log unexpected errors
+            Log::error('Unexpected error in guest registration', [
+                'error' => $errorMessage,
+                'trace' => $e->getTraceAsString(),
+            ]);
+
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to register guest',
-                'error' => $e->getMessage(),
             ], 500);
         }
     }
@@ -177,10 +194,14 @@ class LumaGuestController extends Controller
             ], 404);
 
         } catch (\Exception $e) {
+            Log::error('Failed to connect wallet', [
+                'error' => $e->getMessage(),
+                'luma_guest_id' => $request->luma_guest_id ?? null,
+            ]);
+
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to connect wallet',
-                'error' => $e->getMessage(),
             ], 500);
         }
     }
@@ -249,10 +270,14 @@ class LumaGuestController extends Controller
             ], 200);
 
         } catch (\Exception $e) {
+            Log::error('Failed to retrieve user by wallet', [
+                'error' => $e->getMessage(),
+                'wallet_address' => $request->wallet_address ?? null,
+            ]);
+
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to retrieve user details',
-                'error' => $e->getMessage(),
             ], 500);
         }
     }
