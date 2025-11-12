@@ -4,11 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class LumaGuest extends Model
 {
     protected $fillable = [
         'luma_event_id',
+        'user_id',
         'guest_id',
         'luma_user_id',
         'approval_status',
@@ -41,5 +43,21 @@ class LumaGuest extends Model
     public function lumaEvent(): BelongsTo
     {
         return $this->belongsTo(LumaEvent::class);
+    }
+
+    /**
+     * Get the user that this guest is associated with.
+     */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    /**
+     * Get the wallet addresses for this guest.
+     */
+    public function walletAddresses(): HasMany
+    {
+        return $this->hasMany(LumaGuestWalletAddress::class);
     }
 }

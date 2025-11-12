@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\ConferenceController;
 use App\Http\Controllers\Api\ConferenceStaffController;
+use App\Http\Controllers\Api\LumaGuestController;
 use App\Http\Controllers\Api\SideEventController;
 use App\Http\Controllers\Api\SideEventStaffController;
 use Illuminate\Http\Request;
@@ -78,3 +79,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/conferences/{conference}/side-events/{sideEvent}/available-site-managers', [SideEventStaffController::class, 'listAvailableSiteManagers']);
     Route::get('/conferences/{conference}/side-events/{sideEvent}/available-volunteers', [SideEventStaffController::class, 'listAvailableVolunteers']);
 });
+
+// Luma Guest Routes (Public - for mobile app QR code scanning)
+Route::post('/luma/guests/register', [LumaGuestController::class, 'register']);
+Route::post('/luma/guests/connect-wallet', [LumaGuestController::class, 'connectWallet']);
+Route::get('/luma/guests/by-wallet', [LumaGuestController::class, 'getUserByWallet']);

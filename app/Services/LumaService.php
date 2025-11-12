@@ -145,6 +145,50 @@ class LumaService
     }
 
     /**
+     * Get a single guest by guest ID.
+     *
+     * @param string $guestApiId The Luma guest API ID
+     * @param string $eventApiId The Luma event API ID
+     * @param string $apiKey The Luma API key
+     * @return array The guest data
+     * @throws \Exception
+     */
+    public function getGuestById(string $guestApiId, string $eventApiId, string $apiKey): array
+    {
+        try {
+            $response = $this->client($apiKey)->get(
+                $this->endpoint('event/get-guest'),
+                [
+                    'id' => $guestApiId,
+                    'event_id' => $eventApiId,
+                ]
+            );
+
+            if (!$response->successful()) {
+                $this->logError('get-guest', $response, [
+                    'guest_id' => $guestApiId,
+                    'event_id' => $eventApiId,
+                ]);
+
+                throw new \Exception(
+                    "Luma API error: {$response->status()} - {$response->body()}"
+                );
+            }
+
+            return $response->json();
+        } catch (\Illuminate\Http\Client\ConnectionException $e) {
+            Log::error('Luma API connection error', [
+                'endpoint' => 'event/get-guest',
+                'guest_id' => $guestApiId,
+                'event_id' => $eventApiId,
+                'error' => $e->getMessage(),
+            ]);
+
+            throw new \Exception("Failed to connect to Luma API: {$e->getMessage()}");
+        }
+    }
+
+    /**
      * Log API errors.
      */
     protected function logError(string $endpoint, Response $response, array $context = []): void

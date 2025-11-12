@@ -1,790 +1,1147 @@
 {
-	"info": {
-		"_postman_id": "conference-api-collection",
-		"name": "Conference Management API",
-		"description": "Complete API collection for Conference and Side Event Management with Staff Assignment",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
-	},
-	"auth": {
-		"type": "bearer",
-		"bearer": [
-			{
-				"key": "token",
-				"value": "{{auth_token}}",
-				"type": "string"
-			}
-		]
-	},
-	"item": [
-		{
-			"name": "Authentication",
-			"item": [
-				{
-					"name": "Login - Administrator",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"if (pm.response.code === 200) {",
-									"    var jsonData = pm.response.json();",
-									"    pm.collectionVariables.set(\"auth_token\", jsonData.token);",
-									"    console.log(\"Token saved: \" + jsonData.token);",
-									"}"
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"auth": {
-							"type": "noauth"
-						},
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"email\": \"admin@example.com\",\n    \"password\": \"password\",\n    \"device_name\": \"postman\"\n}"
-						},
-						"url": {
-							"raw": "{{base_url}}/api/login",
-							"host": ["{{base_url}}"],
-							"path": ["api", "login"]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Login - Administrator Assistant",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"if (pm.response.code === 200) {",
-									"    var jsonData = pm.response.json();",
-									"    pm.collectionVariables.set(\"auth_token\", jsonData.token);",
-									"    console.log(\"Token saved: \" + jsonData.token);",
-									"}"
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"auth": {
-							"type": "noauth"
-						},
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"email\": \"assistant@example.com\",\n    \"password\": \"password\",\n    \"device_name\": \"postman\"\n}"
-						},
-						"url": {
-							"raw": "{{base_url}}/api/login",
-							"host": ["{{base_url}}"],
-							"path": ["api", "login"]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Login - Site Manager",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"if (pm.response.code === 200) {",
-									"    var jsonData = pm.response.json();",
-									"    pm.collectionVariables.set(\"auth_token\", jsonData.token);",
-									"    console.log(\"Token saved: \" + jsonData.token);",
-									"}"
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"auth": {
-							"type": "noauth"
-						},
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"email\": \"manager@example.com\",\n    \"password\": \"password\",\n    \"device_name\": \"postman\"\n}"
-						},
-						"url": {
-							"raw": "{{base_url}}/api/login",
-							"host": ["{{base_url}}"],
-							"path": ["api", "login"]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Login - Volunteer",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"if (pm.response.code === 200) {",
-									"    var jsonData = pm.response.json();",
-									"    pm.collectionVariables.set(\"auth_token\", jsonData.token);",
-									"    console.log(\"Token saved: \" + jsonData.token);",
-									"}"
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"auth": {
-							"type": "noauth"
-						},
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"email\": \"volunteer@example.com\",\n    \"password\": \"password\",\n    \"device_name\": \"postman\"\n}"
-						},
-						"url": {
-							"raw": "{{base_url}}/api/login",
-							"host": ["{{base_url}}"],
-							"path": ["api", "login"]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Login - VIP Attendee",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"if (pm.response.code === 200) {",
-									"    var jsonData = pm.response.json();",
-									"    pm.collectionVariables.set(\"auth_token\", jsonData.token);",
-									"    console.log(\"Token saved: \" + jsonData.token);",
-									"}"
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"auth": {
-							"type": "noauth"
-						},
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"email\": \"vip@example.com\",\n    \"password\": \"password\",\n    \"device_name\": \"postman\"\n}"
-						},
-						"url": {
-							"raw": "{{base_url}}/api/login",
-							"host": ["{{base_url}}"],
-							"path": ["api", "login"]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Login - General Attendee",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"if (pm.response.code === 200) {",
-									"    var jsonData = pm.response.json();",
-									"    pm.collectionVariables.set(\"auth_token\", jsonData.token);",
-									"    console.log(\"Token saved: \" + jsonData.token);",
-									"}"
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"auth": {
-							"type": "noauth"
-						},
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"email\": \"user@example.com\",\n    \"password\": \"password\",\n    \"device_name\": \"postman\"\n}"
-						},
-						"url": {
-							"raw": "{{base_url}}/api/login",
-							"host": ["{{base_url}}"],
-							"path": ["api", "login"]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Get Current User Info",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{base_url}}/api/me",
-							"host": ["{{base_url}}"],
-							"path": ["api", "me"]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Logout",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"url": {
-							"raw": "{{base_url}}/api/logout",
-							"host": ["{{base_url}}"],
-							"path": ["api", "logout"]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "Conferences",
-			"item": [
-				{
-					"name": "List Conferences",
-					"request": {
-						"auth": {
-							"type": "noauth"
-						},
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{base_url}}/api/conferences?status=upcoming&per_page=10",
-							"host": ["{{base_url}}"],
-							"path": ["api", "conferences"],
-							"query": [
-								{
-									"key": "status",
-									"value": "upcoming",
-									"description": "active, upcoming, past"
-								},
-								{
-									"key": "search",
-									"value": "",
-									"disabled": true
-								},
-								{
-									"key": "per_page",
-									"value": "10"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Get Conference Details",
-					"request": {
-						"auth": {
-							"type": "noauth"
-						},
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{base_url}}/api/conferences/{{conference_id}}",
-							"host": ["{{base_url}}"],
-							"path": ["api", "conferences", "{{conference_id}}"]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Create Conference (Admin)",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"title\": \"Tech Conference 2024\",\n    \"description\": \"Annual technology conference\",\n    \"short_description\": \"Tech conference bringing together industry leaders\",\n    \"start_datetime\": \"2024-12-01 09:00:00\",\n    \"end_datetime\": \"2024-12-03 18:00:00\",\n    \"registration_start_datetime\": \"2024-10-01 00:00:00\",\n    \"registration_end_datetime\": \"2024-11-25 23:59:59\",\n    \"timezone\": \"America/New_York\",\n    \"venue_name\": \"Convention Center\",\n    \"venue_address\": \"123 Main St\",\n    \"city\": \"New York\",\n    \"state\": \"NY\",\n    \"country\": \"USA\"\n}"
-						},
-						"url": {
-							"raw": "{{base_url}}/api/conferences",
-							"host": ["{{base_url}}"],
-							"path": ["api", "conferences"]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Update Conference (Admin)",
-					"request": {
-						"method": "PUT",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"title\": \"Updated Conference Title\",\n    \"city\": \"San Francisco\"\n}"
-						},
-						"url": {
-							"raw": "{{base_url}}/api/conferences/{{conference_id}}",
-							"host": ["{{base_url}}"],
-							"path": ["api", "conferences", "{{conference_id}}"]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Delete Conference (Admin)",
-					"request": {
-						"method": "DELETE",
-						"header": [],
-						"url": {
-							"raw": "{{base_url}}/api/conferences/{{conference_id}}",
-							"host": ["{{base_url}}"],
-							"path": ["api", "conferences", "{{conference_id}}"]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "Side Events",
-			"item": [
-				{
-					"name": "List Side Events",
-					"request": {
-						"auth": {
-							"type": "noauth"
-						},
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{base_url}}/api/conferences/{{conference_id}}/side-events?event_type=workshop",
-							"host": ["{{base_url}}"],
-							"path": ["api", "conferences", "{{conference_id}}", "side-events"],
-							"query": [
-								{
-									"key": "event_type",
-									"value": "workshop",
-									"description": "workshop, panel, networking, presentation"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Get Side Event Details",
-					"request": {
-						"auth": {
-							"type": "noauth"
-						},
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{base_url}}/api/conferences/{{conference_id}}/side-events/{{side_event_id}}",
-							"host": ["{{base_url}}"],
-							"path": ["api", "conferences", "{{conference_id}}", "side-events", "{{side_event_id}}"]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Create Side Event (Admin)",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"title\": \"AI Workshop\",\n    \"description\": \"Hands-on AI development workshop\",\n    \"start_datetime\": \"2024-12-01 10:00:00\",\n    \"end_datetime\": \"2024-12-01 12:00:00\",\n    \"venue_name\": \"Convention Center\",\n    \"room_number\": \"Room 305\",\n    \"event_type\": \"workshop\",\n    \"sort_order\": 1\n}"
-						},
-						"url": {
-							"raw": "{{base_url}}/api/conferences/{{conference_id}}/side-events",
-							"host": ["{{base_url}}"],
-							"path": ["api", "conferences", "{{conference_id}}", "side-events"]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Update Side Event (Admin)",
-					"request": {
-						"method": "PUT",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"title\": \"Advanced AI Workshop\",\n    \"room_number\": \"Room 405\"\n}"
-						},
-						"url": {
-							"raw": "{{base_url}}/api/conferences/{{conference_id}}/side-events/{{side_event_id}}",
-							"host": ["{{base_url}}"],
-							"path": ["api", "conferences", "{{conference_id}}", "side-events", "{{side_event_id}}"]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Delete Side Event (Admin)",
-					"request": {
-						"method": "DELETE",
-						"header": [],
-						"url": {
-							"raw": "{{base_url}}/api/conferences/{{conference_id}}/side-events/{{side_event_id}}",
-							"host": ["{{base_url}}"],
-							"path": ["api", "conferences", "{{conference_id}}", "side-events", "{{side_event_id}}"]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "Conference Staff",
-			"item": [
-				{
-					"name": "Attach Site Manager",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"user_id\": 5\n}"
-						},
-						"url": {
-							"raw": "{{base_url}}/api/conferences/{{conference_id}}/site-managers",
-							"host": ["{{base_url}}"],
-							"path": ["api", "conferences", "{{conference_id}}", "site-managers"]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Detach Site Manager",
-					"request": {
-						"method": "DELETE",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"user_id\": 5\n}"
-						},
-						"url": {
-							"raw": "{{base_url}}/api/conferences/{{conference_id}}/site-managers",
-							"host": ["{{base_url}}"],
-							"path": ["api", "conferences", "{{conference_id}}", "site-managers"]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Attach Volunteer",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"user_id\": 10\n}"
-						},
-						"url": {
-							"raw": "{{base_url}}/api/conferences/{{conference_id}}/volunteers",
-							"host": ["{{base_url}}"],
-							"path": ["api", "conferences", "{{conference_id}}", "volunteers"]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Detach Volunteer",
-					"request": {
-						"method": "DELETE",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"user_id\": 10\n}"
-						},
-						"url": {
-							"raw": "{{base_url}}/api/conferences/{{conference_id}}/volunteers",
-							"host": ["{{base_url}}"],
-							"path": ["api", "conferences", "{{conference_id}}", "volunteers"]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "List Site Managers",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{base_url}}/api/conferences/{{conference_id}}/site-managers",
-							"host": ["{{base_url}}"],
-							"path": ["api", "conferences", "{{conference_id}}", "site-managers"]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "List Volunteers",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{base_url}}/api/conferences/{{conference_id}}/volunteers",
-							"host": ["{{base_url}}"],
-							"path": ["api", "conferences", "{{conference_id}}", "volunteers"]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "Side Event Staff",
-			"item": [
-				{
-					"name": "Attach Site Manager",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"user_id\": 5\n}"
-						},
-						"url": {
-							"raw": "{{base_url}}/api/conferences/{{conference_id}}/side-events/{{side_event_id}}/site-managers",
-							"host": ["{{base_url}}"],
-							"path": ["api", "conferences", "{{conference_id}}", "side-events", "{{side_event_id}}", "site-managers"]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Detach Site Manager",
-					"request": {
-						"method": "DELETE",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"user_id\": 5\n}"
-						},
-						"url": {
-							"raw": "{{base_url}}/api/conferences/{{conference_id}}/side-events/{{side_event_id}}/site-managers",
-							"host": ["{{base_url}}"],
-							"path": ["api", "conferences", "{{conference_id}}", "side-events", "{{side_event_id}}", "site-managers"]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Attach Volunteer",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"user_id\": 10\n}"
-						},
-						"url": {
-							"raw": "{{base_url}}/api/conferences/{{conference_id}}/side-events/{{side_event_id}}/volunteers",
-							"host": ["{{base_url}}"],
-							"path": ["api", "conferences", "{{conference_id}}", "side-events", "{{side_event_id}}", "volunteers"]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Detach Volunteer",
-					"request": {
-						"method": "DELETE",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"user_id\": 10\n}"
-						},
-						"url": {
-							"raw": "{{base_url}}/api/conferences/{{conference_id}}/side-events/{{side_event_id}}/volunteers",
-							"host": ["{{base_url}}"],
-							"path": ["api", "conferences", "{{conference_id}}", "side-events", "{{side_event_id}}", "volunteers"]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "List Site Managers",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{base_url}}/api/conferences/{{conference_id}}/side-events/{{side_event_id}}/site-managers",
-							"host": ["{{base_url}}"],
-							"path": ["api", "conferences", "{{conference_id}}", "side-events", "{{side_event_id}}", "site-managers"]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "List Volunteers",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{base_url}}/api/conferences/{{conference_id}}/side-events/{{side_event_id}}/volunteers",
-							"host": ["{{base_url}}"],
-							"path": ["api", "conferences", "{{conference_id}}", "side-events", "{{side_event_id}}", "volunteers"]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "List Available Site Managers",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{base_url}}/api/conferences/{{conference_id}}/side-events/{{side_event_id}}/available-site-managers",
-							"host": ["{{base_url}}"],
-							"path": ["api", "conferences", "{{conference_id}}", "side-events", "{{side_event_id}}", "available-site-managers"]
-						},
-						"description": "Returns site managers attached to conference who have no time conflicts"
-					},
-					"response": []
-				},
-				{
-					"name": "List Available Volunteers",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{base_url}}/api/conferences/{{conference_id}}/side-events/{{side_event_id}}/available-volunteers",
-							"host": ["{{base_url}}"],
-							"path": ["api", "conferences", "{{conference_id}}", "side-events", "{{side_event_id}}", "available-volunteers"]
-						},
-						"description": "Returns volunteers attached to conference who have no time conflicts"
-					},
-					"response": []
-				}
-			]
-		}
-	],
-	"variable": [
-		{
-			"key": "base_url",
-			"value": "http://localhost:8000",
-			"type": "string"
-		},
-		{
-			"key": "auth_token",
-			"value": "",
-			"type": "string"
-		},
-		{
-			"key": "conference_id",
-			"value": "1",
-			"type": "string"
-		},
-		{
-			"key": "side_event_id",
-			"value": "1",
-			"type": "string"
-		}
-	]
+  "info": {
+    "_postman_id": "conference-api-collection",
+    "name": "Conference Management API",
+    "description": "Complete API collection for Conference and Side Event Management with Staff Assignment",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{auth_token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "item": [
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Login - Administrator",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.collectionVariables.set(\"auth_token\", jsonData.token);",
+                  "    console.log(\"Token saved: \" + jsonData.token);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"admin@example.com\",\n    \"password\": \"password\",\n    \"device_name\": \"postman\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login - Administrator Assistant",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.collectionVariables.set(\"auth_token\", jsonData.token);",
+                  "    console.log(\"Token saved: \" + jsonData.token);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"assistant@example.com\",\n    \"password\": \"password\",\n    \"device_name\": \"postman\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login - Site Manager",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.collectionVariables.set(\"auth_token\", jsonData.token);",
+                  "    console.log(\"Token saved: \" + jsonData.token);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"manager@example.com\",\n    \"password\": \"password\",\n    \"device_name\": \"postman\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login - Volunteer",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.collectionVariables.set(\"auth_token\", jsonData.token);",
+                  "    console.log(\"Token saved: \" + jsonData.token);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"volunteer@example.com\",\n    \"password\": \"password\",\n    \"device_name\": \"postman\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login - VIP Attendee",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.collectionVariables.set(\"auth_token\", jsonData.token);",
+                  "    console.log(\"Token saved: \" + jsonData.token);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"vip@example.com\",\n    \"password\": \"password\",\n    \"device_name\": \"postman\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login - General Attendee",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.collectionVariables.set(\"auth_token\", jsonData.token);",
+                  "    console.log(\"Token saved: \" + jsonData.token);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"user@example.com\",\n    \"password\": \"password\",\n    \"device_name\": \"postman\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Current User Info",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/me",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "me"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/logout",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "logout"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Conferences",
+      "item": [
+        {
+          "name": "List Conferences",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/conferences?status=upcoming&per_page=10",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "conferences"
+              ],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "upcoming",
+                  "description": "active, upcoming, past"
+                },
+                {
+                  "key": "search",
+                  "value": "",
+                  "disabled": true
+                },
+                {
+                  "key": "per_page",
+                  "value": "10"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Conference Details",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/conferences/{{conference_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "conferences",
+                "{{conference_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Conference (Admin)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"title\": \"Tech Conference 2024\",\n    \"description\": \"Annual technology conference\",\n    \"short_description\": \"Tech conference bringing together industry leaders\",\n    \"start_datetime\": \"2024-12-01 09:00:00\",\n    \"end_datetime\": \"2024-12-03 18:00:00\",\n    \"registration_start_datetime\": \"2024-10-01 00:00:00\",\n    \"registration_end_datetime\": \"2024-11-25 23:59:59\",\n    \"timezone\": \"America/New_York\",\n    \"venue_name\": \"Convention Center\",\n    \"venue_address\": \"123 Main St\",\n    \"city\": \"New York\",\n    \"state\": \"NY\",\n    \"country\": \"USA\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/conferences",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "conferences"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Conference (Admin)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"title\": \"Updated Conference Title\",\n    \"city\": \"San Francisco\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/conferences/{{conference_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "conferences",
+                "{{conference_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Conference (Admin)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/conferences/{{conference_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "conferences",
+                "{{conference_id}}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Side Events",
+      "item": [
+        {
+          "name": "List Side Events",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/conferences/{{conference_id}}/side-events?event_type=workshop",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "conferences",
+                "{{conference_id}}",
+                "side-events"
+              ],
+              "query": [
+                {
+                  "key": "event_type",
+                  "value": "workshop",
+                  "description": "workshop, panel, networking, presentation"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Side Event Details",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/conferences/{{conference_id}}/side-events/{{side_event_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "conferences",
+                "{{conference_id}}",
+                "side-events",
+                "{{side_event_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Side Event (Admin)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"title\": \"AI Workshop\",\n    \"description\": \"Hands-on AI development workshop\",\n    \"start_datetime\": \"2024-12-01 10:00:00\",\n    \"end_datetime\": \"2024-12-01 12:00:00\",\n    \"venue_name\": \"Convention Center\",\n    \"room_number\": \"Room 305\",\n    \"event_type\": \"workshop\",\n    \"sort_order\": 1\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/conferences/{{conference_id}}/side-events",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "conferences",
+                "{{conference_id}}",
+                "side-events"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Side Event (Admin)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"title\": \"Advanced AI Workshop\",\n    \"room_number\": \"Room 405\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/conferences/{{conference_id}}/side-events/{{side_event_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "conferences",
+                "{{conference_id}}",
+                "side-events",
+                "{{side_event_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Side Event (Admin)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/conferences/{{conference_id}}/side-events/{{side_event_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "conferences",
+                "{{conference_id}}",
+                "side-events",
+                "{{side_event_id}}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Conference Staff",
+      "item": [
+        {
+          "name": "Attach Site Manager",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"user_id\": 5\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/conferences/{{conference_id}}/site-managers",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "conferences",
+                "{{conference_id}}",
+                "site-managers"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Detach Site Manager",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"user_id\": 5\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/conferences/{{conference_id}}/site-managers",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "conferences",
+                "{{conference_id}}",
+                "site-managers"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Attach Volunteer",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"user_id\": 10\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/conferences/{{conference_id}}/volunteers",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "conferences",
+                "{{conference_id}}",
+                "volunteers"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Detach Volunteer",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"user_id\": 10\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/conferences/{{conference_id}}/volunteers",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "conferences",
+                "{{conference_id}}",
+                "volunteers"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List Site Managers",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/conferences/{{conference_id}}/site-managers",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "conferences",
+                "{{conference_id}}",
+                "site-managers"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List Volunteers",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/conferences/{{conference_id}}/volunteers",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "conferences",
+                "{{conference_id}}",
+                "volunteers"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Side Event Staff",
+      "item": [
+        {
+          "name": "Attach Site Manager",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"user_id\": 5\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/conferences/{{conference_id}}/side-events/{{side_event_id}}/site-managers",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "conferences",
+                "{{conference_id}}",
+                "side-events",
+                "{{side_event_id}}",
+                "site-managers"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Detach Site Manager",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"user_id\": 5\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/conferences/{{conference_id}}/side-events/{{side_event_id}}/site-managers",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "conferences",
+                "{{conference_id}}",
+                "side-events",
+                "{{side_event_id}}",
+                "site-managers"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Attach Volunteer",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"user_id\": 10\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/conferences/{{conference_id}}/side-events/{{side_event_id}}/volunteers",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "conferences",
+                "{{conference_id}}",
+                "side-events",
+                "{{side_event_id}}",
+                "volunteers"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Detach Volunteer",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"user_id\": 10\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/conferences/{{conference_id}}/side-events/{{side_event_id}}/volunteers",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "conferences",
+                "{{conference_id}}",
+                "side-events",
+                "{{side_event_id}}",
+                "volunteers"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List Site Managers",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/conferences/{{conference_id}}/side-events/{{side_event_id}}/site-managers",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "conferences",
+                "{{conference_id}}",
+                "side-events",
+                "{{side_event_id}}",
+                "site-managers"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List Volunteers",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/conferences/{{conference_id}}/side-events/{{side_event_id}}/volunteers",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "conferences",
+                "{{conference_id}}",
+                "side-events",
+                "{{side_event_id}}",
+                "volunteers"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List Available Site Managers",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/conferences/{{conference_id}}/side-events/{{side_event_id}}/available-site-managers",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "conferences",
+                "{{conference_id}}",
+                "side-events",
+                "{{side_event_id}}",
+                "available-site-managers"
+              ]
+            },
+            "description": "Returns site managers attached to conference who have no time conflicts"
+          },
+          "response": []
+        },
+        {
+          "name": "List Available Volunteers",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/conferences/{{conference_id}}/side-events/{{side_event_id}}/available-volunteers",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "conferences",
+                "{{conference_id}}",
+                "side-events",
+                "{{side_event_id}}",
+                "available-volunteers"
+              ]
+            },
+            "description": "Returns volunteers attached to conference who have no time conflicts"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Luma Guests",
+      "item": [
+        {
+          "name": "Register Guest from QR Code",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    var jsonData = pm.response.json();",
+                  "    if (jsonData.data && jsonData.data.luma_guest_id) {",
+                  "        pm.collectionVariables.set(\"luma_guest_id\", jsonData.data.luma_guest_id);",
+                  "        pm.collectionVariables.set(\"user_id\", jsonData.data.user_id);",
+                  "        console.log(\"Luma Guest ID saved: \" + jsonData.data.luma_guest_id);",
+                  "        console.log(\"User ID saved: \" + jsonData.data.user_id);",
+                  "    }",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"event_id\": \"evt-qi1HirmtDE6sCg6\",\n    \"qr_code_url\": \"https://luma.com/check-in/evt-qi1HirmtDE6sCg6?pk=g-418le06V5cDsoA9\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/luma/guests/register",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "luma",
+                "guests",
+                "register"
+              ]
+            },
+            "description": "Register a Luma guest by scanning their QR code. Extracts the guest ID from the 'pk' parameter in the QR code URL, fetches guest data from Luma API, and creates a user account."
+          },
+          "response": []
+        },
+        {
+          "name": "Connect Wallet Address",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"luma_guest_id\": {{luma_guest_id}},\n    \"wallet_address\": \"5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY\",\n    \"wallet_type\": \"polkadot\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/luma/guests/connect-wallet",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "luma",
+                "guests",
+                "connect-wallet"
+              ]
+            },
+            "description": "Connect a Polkadot wallet address to a Luma guest. Supports multiple wallet types (polkadot, ethereum, bitcoin)."
+          },
+          "response": []
+        },
+        {
+          "name": "Get User by Wallet Address",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/luma/guests/by-wallet?wallet_address={{wallet_address}}&wallet_type=polkadot",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "luma",
+                "guests",
+                "by-wallet"
+              ],
+              "query": [
+                {
+                  "key": "wallet_address",
+                  "value": "{{wallet_address}}",
+                  "description": "The wallet address to search for"
+                },
+                {
+                  "key": "wallet_type",
+                  "value": "polkadot",
+                  "description": "Wallet type (polkadot, ethereum, bitcoin)"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8000",
+      "type": "string"
+    },
+    {
+      "key": "auth_token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "conference_id",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "side_event_id",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "luma_guest_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "user_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "wallet_address",
+      "value": "",
+      "type": "string"
+    }
+  ]
 }

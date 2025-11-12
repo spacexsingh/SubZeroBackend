@@ -5,11 +5,14 @@ namespace App\Console\Commands;
 use App\Models\LumaEvent;
 use App\Models\LumaGuest;
 use App\Services\LumaService;
+use App\Traits\ManagesLumaGuestUsers;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 
 class SyncLumaGuests extends Command
 {
+    use ManagesLumaGuestUsers;
+
     /**
      * The Luma service instance.
      */
@@ -136,7 +139,6 @@ class SyncLumaGuests extends Command
             // Update sync metadata
             $lumaEvent->update([
                 'last_synced_at' => now(),
-                'cursor' => $cursor, // Store the last cursor for reference
             ]);
 
             if ($syncedCount === 0 && $updatedCount === 0) {
@@ -174,6 +176,10 @@ class SyncLumaGuests extends Command
             return false;
         }
 
+        // Determine user type based on event ticket name
+        $userType = $this->determineUserType($guestInfo);
+
+        // Check if guest already exists
         $guest = LumaGuest::where('guest_id', $guestApiId)->first();
 
         $guestAttributes = [
@@ -195,10 +201,24 @@ class SyncLumaGuests extends Command
         ];
 
         if ($guest) {
+            // Update existing guest
             $guest->update($guestAttributes);
+
+            // If no user exists, create one
+            if (!$guest->user_id) {
+                $user = $this->createUser($guestInfo, $userType);
+                $guest->update(['user_id' => $user->id]);
+            }
+
             return true; // Updated
         } else {
+            // Create new user first
+            $user = $this->createUser($guestInfo, $userType);
+
+            // Create new guest with user_id
+            $guestAttributes['user_id'] = $user->id;
             LumaGuest::create($guestAttributes);
+
             return false; // Created
         }
     }
