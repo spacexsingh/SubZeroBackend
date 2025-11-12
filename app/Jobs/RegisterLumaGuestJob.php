@@ -58,8 +58,8 @@ class RegisterLumaGuestJob implements ShouldQueue
                 $lumaGuest = LumaGuest::where('guest_id', $guestApiId)->first();
 
                 if ($lumaGuest) {
-                    // Update existing guest
-                    $this->updateLumaGuest($lumaGuest, $lumaEvent->id, $guestInfo, $guestData);
+                    // Guest already exists (from sync) - don't overwrite existing data
+                    // Only create and link user if needed
 
                     // If no user exists, create one
                     if (!$lumaGuest->user_id) {
@@ -75,6 +75,9 @@ class RegisterLumaGuestJob implements ShouldQueue
                     // Create new guest
                     $lumaGuest = $this->createLumaGuest($lumaEvent->id, $user->id, $guestApiId, $guestInfo, $guestData);
                 }
+
+                // Update status to app_registered
+                $lumaGuest->updateStatus('app_registered', 'Guest registered via mobile app');
 
                 return [
                     'luma_guest_id' => $lumaGuest->id,

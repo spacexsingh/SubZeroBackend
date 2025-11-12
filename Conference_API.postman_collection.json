@@ -1103,6 +1103,36 @@
             }
           },
           "response": []
+        },
+        {
+          "name": "Update Guest Status",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"nfc_initialized\",\n  \"notes\": \"NFC tag written successfully\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/luma/guests/{{luma_guest_id}}/status",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "luma",
+                "guests",
+                "{{luma_guest_id}}",
+                "status"
+              ]
+            }
+          },
+          "response": []
         }
       ]
     }

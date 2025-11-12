@@ -149,6 +149,18 @@ class LumaGuestController extends Controller
         }
 
         try {
+            $walletType = $request->wallet_type ?? 'polkadot';
+
+            // Validate Polkadot wallet address format
+            if ($walletType === 'polkadot') {
+                if (!$this->isValidPolkadotAddress($request->wallet_address)) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Invalid Polkadot wallet address format',
+                    ], 422);
+                }
+            }
+
             $lumaGuest = LumaGuest::findOrFail($request->luma_guest_id);
 
             // Check if wallet already exists for this guest and type
@@ -174,6 +186,9 @@ class LumaGuestController extends Controller
                 ]);
 
                 $action = 'connected';
+
+                // Update status to wallet_registered when first wallet is connected
+                $lumaGuest->updateStatus('wallet_registered', 'Wallet address connected');
             }
 
             return response()->json([
@@ -264,6 +279,7 @@ class LumaGuestController extends Controller
                     'email' => $user->email,
                     'user_type' => $user->user_type,
                     'luma_guest_id' => $lumaGuest->id,
+                    'current_status' => $lumaGuest->current_status,
                     'wallet_address' => $walletAddress->wallet_address,
                     'wallet_type' => $walletAddress->wallet_type,
                 ],
@@ -280,5 +296,95 @@ class LumaGuestController extends Controller
                 'message' => 'Failed to retrieve user details',
             ], 500);
         }
+    }
+
+    /**
+     * Update the status of a Luma guest.
+     *
+     * @param Request $request
+     * @param int $id
+     * @return JsonResponse
+     */
+    public function updateStatus(Request $request, int $id): JsonResponse
+    {
+        $validator = Validator::make($request->all(), [
+            'status' => 'required|string|in:synced,app_registered,wallet_registered,nfc_initialized',
+            'notes' => 'sometimes|string|max:500',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Validation error',
+                'errors' => $validator->errors(),
+            ], 422);
+        }
+
+        try {
+            $lumaGuest = LumaGuest::findOrFail($id);
+
+            // Update status
+            $lumaGuest->updateStatus(
+                $request->status,
+                $request->notes ?? "Status updated via API"
+            );
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Status updated successfully',
+                'data' => [
+                    'luma_guest_id' => $lumaGuest->id,
+                    'current_status' => $lumaGuest->current_status,
+                ],
+            ], 200);
+
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Luma guest not found',
+            ], 404);
+
+        } catch (\Exception $e) {
+            Log::error('Failed to update guest status', [
+                'error' => $e->getMessage(),
+                'luma_guest_id' => $id,
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to update status',
+            ], 500);
+        }
+    }
+
+    /**
+     * Validate Polkadot/Substrate address format.
+     *
+     * @param string $address
+     * @return bool
+     */
+    protected function isValidPolkadotAddress(string $address): bool
+    {
+        // Polkadot addresses are base58 encoded and typically 47-48 characters long
+        if (strlen($address) < 47 || strlen($address) > 48) {
+            return false;
+        }
+
+        // Check if it matches the base58 character set
+        // Polkadot uses SS58 address format which is base58 encoded
+        if (!preg_match('/^[1-9A-HJ-NP-Za-km-z]+$/', $address)) {
+            return false;
+        }
+
+        // Additional check: Polkadot addresses typically start with specific prefixes
+        // 1-5: Polkadot mainnet, F-G: Kusama
+        $firstChar = $address[0];
+        $validPrefixes = ['1', '2', '3', '4', '5', 'F', 'G', 'C', 'D', 'E', 'H', 'J'];
+
+        if (!in_array($firstChar, $validPrefixes)) {
+            return false;
+        }
+
+        return true;
     }
 }

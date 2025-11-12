@@ -14,6 +14,7 @@ class LumaGuest extends Model
         'guest_id',
         'luma_user_id',
         'approval_status',
+        'current_status',
         'user_name',
         'user_first_name',
         'user_last_name',
@@ -59,5 +60,40 @@ class LumaGuest extends Model
     public function walletAddresses(): HasMany
     {
         return $this->hasMany(LumaGuestWalletAddress::class);
+    }
+
+    /**
+     * Get the status history for this guest.
+     */
+    public function statusHistory(): HasMany
+    {
+        return $this->hasMany(LumaGuestStatusHistory::class)->orderBy('created_at', 'desc');
+    }
+
+    /**
+     * Update the guest status and record history.
+     */
+    public function updateStatus(string $newStatus, ?string $notes = null): void
+    {
+        $oldStatus = $this->current_status;
+
+        // Only update if status has changed
+        if ($oldStatus === $newStatus) {
+            return;
+        }
+
+        // Update current status
+        $this->update(['current_status' => $newStatus]);
+
+        // Mark all previous status history entries as not current
+        $this->statusHistory()->update(['is_current' => false]);
+
+        // Record status change in history with is_current = true
+        $this->statusHistory()->create([
+            'status' => $newStatus,
+            'from_status' => $oldStatus,
+            'notes' => $notes,
+            'is_current' => true,
+        ]);
     }
 }

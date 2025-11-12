@@ -84,3 +84,4 @@ Route::middleware(['auth:sanctum'])->group(function () {
 Route::post('/luma/guests/register', [LumaGuestController::class, 'register']);
 Route::post('/luma/guests/connect-wallet', [LumaGuestController::class, 'connectWallet']);
 Route::get('/luma/guests/by-wallet', [LumaGuestController::class, 'getUserByWallet']);
+Route::put('/luma/guests/{id}/status', [LumaGuestController::class, 'updateStatus']);
