@@ -51,23 +51,47 @@ class PointsController extends Controller
         ]);
     }
 
-    /** POST /api/points/earn { wallet_address, action_code } */
+    /** POST /api/points/earn { wallet_address, action_code OR meta } */
     public function earn(Request $request)
     {
         $data = $request->validate([
             'wallet_address' => ['required', 'string', 'exists:luma_guest_wallet_addresses,wallet_address'],
-            'action_code' => ['required', 'string', Rule::exists('point_actions', 'code')],
+            'action_code' => ['required_without:meta', 'prohibited_with:meta', 'nullable', 'string', Rule::exists('point_actions', 'code')],
+            'meta' => ['required_without:action_code', 'prohibited_with:action_code', 'nullable', 'string'],
         ]);
 
-        $action = PointAction::where('code', $data['action_code'])->firstOrFail();
+        // Find the action by code or meta
+        if (!empty($data['action_code'])) {
+            $action = PointAction::where('code', $data['action_code'])->firstOrFail();
+            $metaIdentifier = null;
+        } else {
+            // Find action where meta JSON contains the provided meta string
+            $action = PointAction::where('meta->identifier', $data['meta'])->first();
+
+            if (!$action) {
+                return response()->json([
+                    'success' => false,
+                    'message' => "No point action found for meta '{$data['meta']}'.",
+                ], 404);
+            }
+
+            $metaIdentifier = $data['meta'];
+        }
 
         $lumaGuestWalletAddresses = LumaGuestWalletAddress::where('wallet_address', $data['wallet_address'])->first();
         $userId = $lumaGuestWalletAddresses->lumaGuest->user_id;
 
-        $alreadyEarned = PointTransaction::where('user_id', $userId)
+        // Check if already earned for this specific action and meta combination
+        $query = PointTransaction::where('user_id', $userId)
             ->where('point_action_id', $action->id)
-            ->where('type', 'earn')
-            ->exists();
+            ->where('type', 'earn');
+
+        // If meta was provided, ensure user hasn't earned with this specific meta value
+        if ($metaIdentifier) {
+            $query->where('meta->identifier', $metaIdentifier);
+        }
+
+        $alreadyEarned = $query->exists();
 
         if ($alreadyEarned) {
             return response()->json([
@@ -77,12 +101,19 @@ class PointsController extends Controller
         }
 
         // ✅ Record transaction
-        $tx = PointTransaction::create([
+        $txData = [
             'user_id'        => $userId,
             'type'           => 'earn',
             'points'         => $action->points,
             'point_action_id'=> $action->id,
-        ]);
+        ];
+
+        // Store meta identifier in transaction if provided
+        if ($metaIdentifier) {
+            $txData['meta'] = ['identifier' => $metaIdentifier];
+        }
+
+        $tx = PointTransaction::create($txData);
 
         $balance = PointTransaction::where('user_id', $userId)->sum('points');
 
