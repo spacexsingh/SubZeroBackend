@@ -9,4 +9,16 @@ enum LumaGuestStatus: string
 
     case NFC_INITIALIZED = 'nfc_initialized';
 
+    /**
+     * Get the display label for the user type
+     */
+    public function label(): string
+    {
+        return match($this) {
+            self::APP_REGISTERED => 'App Registered',
+            self::WALLET_REGISTERED => 'Wallet Registered',
+            self::NFC_INITIALIZED => 'NFC Initialized',
+        };
+    }
+
 }

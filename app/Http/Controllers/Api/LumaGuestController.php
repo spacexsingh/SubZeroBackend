@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Enums\LumaGuestStatus;
 use App\Http\Controllers\Controller;
 use App\Jobs\RegisterLumaGuestJob;
 use App\Models\LumaEvent;
@@ -188,7 +189,7 @@ class LumaGuestController extends Controller
                 $action = 'connected';
 
                 // Update status to wallet_registered when first wallet is connected
-                $lumaGuest->updateStatus('wallet_registered', 'Wallet address connected');
+                $lumaGuest->updateStatus(LumaGuestStatus::WALLET_REGISTERED->value, 'Wallet address connected');
             }
 
             return response()->json([
@@ -311,8 +312,6 @@ class LumaGuestController extends Controller
             'status' => 'required|string|in:synced,app_registered,wallet_registered,nfc_initialized',
             'notes' => 'sometimes|string|max:500',
         ]);
-
-        Log::info('in updateStatus', $request->all());
 
         if ($validator->fails()) {
             return response()->json([

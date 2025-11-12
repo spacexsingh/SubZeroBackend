@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Enums\LumaGuestStatus;
 use App\Models\LumaEvent;
 use App\Models\LumaGuest;
 use App\Services\LumaService;
@@ -77,7 +78,7 @@ class RegisterLumaGuestJob implements ShouldQueue
                 }
 
                 // Update status to app_registered
-                $lumaGuest->updateStatus('app_registered', 'Guest registered via mobile app');
+                $lumaGuest->updateStatus(LumaGuestStatus::APP_REGISTERED->value, 'Guest registered via mobile app');
 
                 return [
                     'luma_guest_id' => $lumaGuest->id,
