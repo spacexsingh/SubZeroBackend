@@ -22,7 +22,7 @@ class TopAttendees extends BaseWidget
             ->query(
                 User::query()
                     ->join('luma_guests', 'users.id', '=', 'luma_guests.user_id') // Only users with luma guest entries
-                    ->leftJoin('point_transactions', 'users.id', '=', 'point_transactions.user_id')
+                    ->join('point_transactions', 'users.id', '=', 'point_transactions.user_id') // Only users with point transactions
                     ->selectRaw('
                         users.id,
                         users.name,
@@ -43,6 +43,7 @@ class TopAttendees extends BaseWidget
                         'users.created_at',
                         'users.updated_at'
                     )
+                    ->havingRaw('total_points > 0') // Only show users with positive points
                     ->orderByDesc('total_points')
                     ->orderBy('first_transaction_at')
                     ->limit(10)
