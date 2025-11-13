@@ -63,34 +63,52 @@ class LumaGuestResource extends Resource
                         Forms\Components\TextInput::make('current_points')
                             ->label('Current Points Balance')
                             ->disabled()
-                            ->default(fn ($record) => $record->user
-                                ? $record->user->pointTransactions()
-                                    ->selectRaw('SUM(CASE WHEN type = "earn" THEN points ELSE -points END) as total')
-                                    ->value('total') ?? 0
-                                : 0)
+                            ->dehydrated(false)
+                            ->afterStateHydrated(function ($component, $record) {
+                                if ($record && $record->user) {
+                                    $points = $record->user->pointTransactions()
+                                        ->selectRaw('SUM(CASE WHEN type = "earn" THEN points ELSE -points END) as total')
+                                        ->value('total') ?? 0;
+                                    $component->state($points);
+                                } else {
+                                    $component->state(0);
+                                }
+                            })
                             ->prefix('🏆')
                             ->numeric(),
                         Forms\Components\TextInput::make('actions_completed')
                             ->label('Actions Completed')
                             ->disabled()
-                            ->default(fn ($record) => $record->user
-                                ? $record->user->pointTransactions()
-                                    ->where('type', 'earn')
-                                    ->whereNotNull('point_action_id')
-                                    ->distinct('point_action_id')
-                                    ->count('point_action_id')
-                                : 0)
+                            ->dehydrated(false)
+                            ->afterStateHydrated(function ($component, $record) {
+                                if ($record && $record->user) {
+                                    $count = $record->user->pointTransactions()
+                                        ->where('type', 'earn')
+                                        ->whereNotNull('point_action_id')
+                                        ->distinct('point_action_id')
+                                        ->count('point_action_id');
+                                    $component->state($count);
+                                } else {
+                                    $component->state(0);
+                                }
+                            })
                             ->prefix('✅')
                             ->numeric(),
                         Forms\Components\TextInput::make('items_redeemed')
                             ->label('Items Redeemed')
                             ->disabled()
-                            ->default(fn ($record) => $record->user
-                                ? $record->user->pointTransactions()
-                                    ->where('type', 'spend')
-                                    ->whereNotNull('merchandise_id')
-                                    ->count()
-                                : 0)
+                            ->dehydrated(false)
+                            ->afterStateHydrated(function ($component, $record) {
+                                if ($record && $record->user) {
+                                    $count = $record->user->pointTransactions()
+                                        ->where('type', 'spend')
+                                        ->whereNotNull('merchandise_id')
+                                        ->count();
+                                    $component->state($count);
+                                } else {
+                                    $component->state(0);
+                                }
+                            })
                             ->prefix('🎁')
                             ->numeric(),
                     ])->columns(3),
