@@ -24,11 +24,25 @@ class TopAttendees extends BaseWidget
                     ->join('luma_guests', 'users.id', '=', 'luma_guests.user_id') // Only users with luma guest entries
                     ->leftJoin('point_transactions', 'users.id', '=', 'point_transactions.user_id')
                     ->selectRaw('
-                        users.*,
+                        users.id,
+                        users.name,
+                        users.email,
+                        users.user_type,
+                        users.email_verified_at,
+                        users.created_at,
+                        users.updated_at,
                         SUM(CASE WHEN point_transactions.type = "earn" THEN point_transactions.points ELSE -point_transactions.points END) as total_points,
                         MIN(point_transactions.created_at) as first_transaction_at
                     ')
-                    ->groupBy('users.id')
+                    ->groupBy(
+                        'users.id',
+                        'users.name',
+                        'users.email',
+                        'users.user_type',
+                        'users.email_verified_at',
+                        'users.created_at',
+                        'users.updated_at'
+                    )
                     ->orderByDesc('total_points')
                     ->orderBy('first_transaction_at')
                     ->limit(10)

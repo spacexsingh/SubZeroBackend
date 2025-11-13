@@ -24,8 +24,27 @@ class TopMerchandises extends BaseWidget
                     ->leftJoin('point_transactions', 'merchandises.id', '=', 'point_transactions.merchandise_id')
                     ->join('luma_guests', 'point_transactions.user_id', '=', 'luma_guests.user_id') // Only count users with luma guest entries
                     ->where('point_transactions.type', 'spend')
-                    ->selectRaw('merchandises.*, COUNT(point_transactions.id) as redemption_count')
-                    ->groupBy('merchandises.id')
+                    ->selectRaw('
+                        merchandises.id,
+                        merchandises.name,
+                        merchandises.code,
+                        merchandises.points_cost,
+                        merchandises.stock,
+                        merchandises.meta,
+                        merchandises.created_at,
+                        merchandises.updated_at,
+                        COUNT(point_transactions.id) as redemption_count
+                    ')
+                    ->groupBy(
+                        'merchandises.id',
+                        'merchandises.name',
+                        'merchandises.code',
+                        'merchandises.points_cost',
+                        'merchandises.stock',
+                        'merchandises.meta',
+                        'merchandises.created_at',
+                        'merchandises.updated_at'
+                    )
                     ->orderByDesc('redemption_count')
                     ->limit(5)
             )
