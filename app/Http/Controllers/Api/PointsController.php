@@ -56,8 +56,19 @@ class PointsController extends Controller
     {
         $data = $request->validate([
             'wallet_address' => ['required', 'string', 'exists:luma_guest_wallet_addresses,wallet_address'],
-            'action_code' => ['required_without:meta', 'prohibited_with:meta', 'nullable', 'string', Rule::exists('point_actions', 'code')],
-            'meta' => ['required_without:action_code', 'prohibited_with:action_code', 'nullable', 'string'],
+            'action_code' => [
+                'required_without:meta',
+                'prohibited_unless:meta,null',
+                'nullable',
+                'string',
+                Rule::exists('point_actions', 'code'),
+            ],
+            'meta' => [
+                'required_without:action_code',
+                'prohibited_unless:action_code,null',
+                'nullable',
+                'string',
+            ],
         ]);
 
         // Find the action by code or meta
