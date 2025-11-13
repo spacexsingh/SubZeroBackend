@@ -82,7 +82,7 @@ class PointsController extends Controller
             if (!$action) {
                 return response()->json([
                     'success' => false,
-                    'message' => "No point action found for meta '{$data['meta']}'.",
+                    'message' => "Invalid entry provided! Are you sure you are scanning the correct QR code ?",
                 ], 404);
             }
 
