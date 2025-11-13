@@ -14,6 +14,6 @@ class PointAction extends Model
     ];
 
     protected $casts = [
-        'meta' => 'array',
+        'meta' => 'json',
     ];
 }
