@@ -58,6 +58,42 @@ class LumaGuestResource extends Resource
                         Forms\Components\TextInput::make('luma_user_id')
                             ->disabled(),
                     ])->columns(2),
+                Forms\Components\Section::make('Points Statistics')
+                    ->schema([
+                        Forms\Components\TextInput::make('current_points')
+                            ->label('Current Points Balance')
+                            ->disabled()
+                            ->default(fn ($record) => $record->user
+                                ? $record->user->pointTransactions()
+                                    ->selectRaw('SUM(CASE WHEN type = "earn" THEN points ELSE -points END) as total')
+                                    ->value('total') ?? 0
+                                : 0)
+                            ->prefix('🏆')
+                            ->numeric(),
+                        Forms\Components\TextInput::make('actions_completed')
+                            ->label('Actions Completed')
+                            ->disabled()
+                            ->default(fn ($record) => $record->user
+                                ? $record->user->pointTransactions()
+                                    ->where('type', 'earn')
+                                    ->whereNotNull('point_action_id')
+                                    ->distinct('point_action_id')
+                                    ->count('point_action_id')
+                                : 0)
+                            ->prefix('✅')
+                            ->numeric(),
+                        Forms\Components\TextInput::make('items_redeemed')
+                            ->label('Items Redeemed')
+                            ->disabled()
+                            ->default(fn ($record) => $record->user
+                                ? $record->user->pointTransactions()
+                                    ->where('type', 'spend')
+                                    ->whereNotNull('merchandise_id')
+                                    ->count()
+                                : 0)
+                            ->prefix('🎁')
+                            ->numeric(),
+                    ])->columns(3),
             ]);
     }
 
@@ -65,34 +101,39 @@ class LumaGuestResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('guest_id')
-                    ->searchable()
-                    ->sortable(),
                 Tables\Columns\TextColumn::make('user_name')
+                    ->label('Username')
                     ->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('user_email')
-                    ->searchable()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('approval_status')
-                    ->badge()
+                    ->label('Email')
                     ->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('current_status')
+                    ->label('Luma Status')
                     ->badge()
                     ->searchable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('registered_at')
-                    ->dateTime()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('checked_in_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(),
-                Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('points')
+                    ->label('Points')
+                    ->badge()
+                    ->color('success')
+                    ->getStateUsing(function ($record) {
+                        if (!$record->user) {
+                            return 0;
+                        }
+                        return $record->user->pointTransactions()
+                            ->selectRaw('SUM(CASE WHEN type = "earn" THEN points ELSE -points END) as total')
+                            ->value('total') ?? 0;
+                    })
+                    ->numeric()
+                    ->sortable(query: function (Builder $query, string $direction): Builder {
+                        return $query
+                            ->leftJoin('point_transactions', 'luma_guests.user_id', '=', 'point_transactions.user_id')
+                            ->selectRaw('luma_guests.*, SUM(CASE WHEN point_transactions.type = "earn" THEN point_transactions.points ELSE -point_transactions.points END) as total_points')
+                            ->groupBy('luma_guests.id')
+                            ->orderBy('total_points', $direction);
+                    }),
             ])
             ->filters([
                 //

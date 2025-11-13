@@ -113,4 +113,12 @@ class User extends Authenticatable implements FilamentUser
         // Allow administrators and administrator assistants to access the admin panel
         return $this->isAdministrator() || $this->isAdministratorAssistant();
     }
+
+    /**
+     * Get the point transactions for this user.
+     */
+    public function pointTransactions()
+    {
+        return $this->hasMany(\App\Models\PointTransaction::class);
+    }
 }
