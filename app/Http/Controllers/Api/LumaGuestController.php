@@ -258,7 +258,7 @@ class LumaGuestController extends Controller
             if (!$walletAddress) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Wallet address not found',
+                    'message' => 'Your wallet address was not found in our system. Please ensure you have connected the correct wallet. Make sure you are registered at the registration desk for Sub0 Symbiosis and have received your wristband.',
                 ], 404);
             }
 
